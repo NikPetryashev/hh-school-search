@@ -15,9 +15,7 @@ public class StopWordsAnalysis {
 
     public StopWordsAnalysis() {
         Set<String> stopWords = new HashSet<>();
-        try {
-//            stopWords = new HashSet<>(Files.readAllLines(Paths.get("src/main/resources", "stopWords.inp"), StandardCharsets.UTF_8));
-            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("stopWords.inp");
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("stopWords.inp")) {
             assert inputStream != null;
             InputStreamReader isReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8 );
             BufferedReader reader = new BufferedReader(isReader);
@@ -35,11 +33,5 @@ public class StopWordsAnalysis {
         return words.stream()
                 .filter(word -> !stopWords.contains(word))
                 .collect(Collectors.toList());
-//        List<String> filterWord = new ArrayList<>();
-//        for ( String word: words){
-//            if (!stopWords.contains(word))
-//                filterWord.add(word);
-//        }
-//        return filterWord;
     }
 }
