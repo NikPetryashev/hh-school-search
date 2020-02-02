@@ -3,8 +3,15 @@ package homework.search.service;
 import homework.search.object.Document;
 import homework.search.object.TermPosition;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class IndexBuilder {
 
@@ -16,7 +23,7 @@ public class IndexBuilder {
 
     public static void writeIndex(List<Document> documents) {
         createDir();
-        HashMap<String, List<TermPosition>> index = getInvertIndexFromDocs(documents);
+        Map<String, List<TermPosition>> index = getInvertIndexFromDocs(documents);
         try (FileWriter fWr = new FileWriter(fileIndex, false)) { //false перезапись файла
             for (Map.Entry <String, List<TermPosition>> entry : index.entrySet()){
                 StringJoiner strJoin = new StringJoiner(";");
@@ -25,46 +32,20 @@ public class IndexBuilder {
             }
             fWr.flush();
             System.out.println("Файл индекса создан!");
-
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static HashMap<String, List<TermPosition>> readIndex() {
-        HashMap<String, List<TermPosition>> index = new HashMap<>();
-        try (FileReader fr = new FileReader(fileIndex)){
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            while((line = br.readLine()) != null){
-                String[] wordsLine = line.split("[:;]");
-                List <TermPosition> setDoc = new ArrayList<>();
-                for (int i=1; i<wordsLine.length; i++){
-                    String[] docIdTerms = wordsLine[i].split("[,\\[\\]\\s]+");
-                    List<Integer> termPos = new ArrayList<>();
-                    for (int j=1; j<docIdTerms.length; j++){
-                        termPos.add(Integer.valueOf(docIdTerms[j]));
-                    }
-                    setDoc.add(new TermPosition(Integer.valueOf(docIdTerms[0]), termPos));
-                }
-                index.put(wordsLine[0],setDoc);
-            }
-        }
-        catch (IOException ex){
-            System.out.println(ex.getMessage());
-        }
-        return index;
-    }
-
-    public static HashMap<String, List<TermPosition>> getInvertIndexFromDocs(List<Document> documents){
-        HashMap<String, List<TermPosition>> invertIndex = new HashMap<>();
+    private static Map<String, List<TermPosition>> getInvertIndexFromDocs(List<Document> documents){
+        Map<String, List<TermPosition>> invertIndex = new HashMap<>();
         for (Document doc:documents){
             buildInvertIndex(invertIndex, doc);
         }
         return invertIndex;
     }
 
-    public static void buildInvertIndex(HashMap<String, List<TermPosition>> invertIndex, Document doc) {
+    private static void buildInvertIndex(Map<String, List<TermPosition>> invertIndex, Document doc) {
         for (Map.Entry <String, List<Integer>> entry : getTermsFromDoc(doc).entrySet()){
             if (!invertIndex.containsKey(entry.getKey())){
                 invertIndex.put(entry.getKey(), new ArrayList<>());
@@ -73,7 +54,35 @@ public class IndexBuilder {
         }
     }
 
-    public static Map<String, List<Integer>> getTermsFromDoc(Document doc) {
+
+    public static Map<String, List<TermPosition>> readIndex() {
+        try (Stream<String> lineStream = Files.newBufferedReader(Paths.get(fileIndex.getAbsolutePath()), StandardCharsets.UTF_8).lines()) {
+            return lineStream
+                    .map(s -> s.split("[:;]"))
+                    .collect(Collectors.toMap(line -> line[0], line -> new ArrayList<>(getListDocIdsWithTermPosition(line))));
+        }
+        catch (IOException ex){
+            System.out.println(ex.getMessage());
+            return Collections.EMPTY_MAP;
+        }
+    }
+
+    private static List <TermPosition> getListDocIdsWithTermPosition(String[] wordsLine) {
+        return Arrays.stream(wordsLine)
+                .skip(1)
+                .map(line -> line.split("[,\\[\\]\\s]+"))
+                .map(docIdTerms -> new TermPosition(Integer.valueOf(docIdTerms[0]), new ArrayList<>(getTermPosition(docIdTerms))))
+                .collect(Collectors.toList());
+    }
+
+    private static List<Integer> getTermPosition(String[] docIdTerms) {
+        return Arrays.stream(docIdTerms)
+                .skip(1)
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    private static Map<String, List<Integer>> getTermsFromDoc(Document doc) {
         Map<String, List<Integer>> termPositionInDoc = new HashMap<>();
         for (int idx=0; idx<doc.getTerms().size(); idx++){
             if (!termPositionInDoc.containsKey(doc.getTerms().get(idx))){

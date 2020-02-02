@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class IndexSearcher {
-    private static HashMap<String, List<TermPosition>> indexData;
+    private static Map<String, List<TermPosition>> indexData;
 
-    public IndexSearcher(HashMap<String, List<TermPosition>> indexData) {
+    public IndexSearcher(Map<String, List<TermPosition>> indexData) {
         IndexSearcher.indexData = indexData;
     }
     

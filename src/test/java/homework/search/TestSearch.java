@@ -15,7 +15,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = " java";
         List<Integer> docId = searcher.searchDocs(query);
-//        System.out.println(docId);
+        System.out.println(docId);
         assertTrue(docId.containsAll(Arrays.asList(1,2,4,5,7)));
     }
 
