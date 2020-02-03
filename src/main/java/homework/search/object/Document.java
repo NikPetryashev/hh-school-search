@@ -6,7 +6,7 @@ public class Document {
     private Integer docId;
     private List<String> terms;
 
-    public Document(Integer docId, List<String> terms) {
+    public Document(final Integer docId, final List<String> terms) {
         this.docId = docId;
         this.terms = terms;
     }
@@ -15,7 +15,7 @@ public class Document {
         return docId;
     }
 
-    public void setDocId(Integer docId) {
+    public void setDocId(final Integer docId) {
         this.docId = docId;
     }
 
@@ -23,7 +23,7 @@ public class Document {
         return terms;
     }
 
-    public void setTerms(List<String> terms) {
+    public void setTerms(final List<String> terms) {
         this.terms = terms;
     }
 }

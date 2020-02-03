@@ -15,7 +15,7 @@ public class Searcher {
     private static Tokenizer tokenizer;
     private static StopWordsAnalysis stopWordsAnalysis;
 
-    public Searcher(String filePath){
+    public Searcher(final String filePath) {
         new IndexBuilder(filePath);
         searcher = new IndexSearcher(IndexBuilder.readIndex());
         tokenizer = new Tokenizer();
@@ -23,14 +23,13 @@ public class Searcher {
     }
 
 
-    public List<Integer> searchDocs(String query){
+    public List<Integer> searchDocs(final String query) {
         List<Integer> documents;
-        if(valueOf(query.charAt(0)).equals("\"") &&
-                valueOf(query.charAt(query.length()-1)).equals("\"")){
-            List<String> terms = getTerms(query.substring(1,query.length()-1));
+        if (valueOf(query.charAt(0)).equals("\"") &&
+                valueOf(query.charAt(query.length() - 1)).equals("\"")) {
+            List<String> terms = getTerms(query.substring(1, query.length() - 1));
             documents = getDocIdsByPhrase(terms);
-        }
-        else {
+        } else {
             List<String> terms = getTerms(query);
             documents = getDocIds(terms);
         }
@@ -38,15 +37,15 @@ public class Searcher {
     }
 
 
-    public List<Integer> getDocIds(List<String> queries) {
+    public List<Integer> getDocIds(final List<String> queries) {
         return searcher.getDocIds(queries);
     }
 
-    public List<Integer> getDocIdsByPhrase(List<String> queries) {
+    public List<Integer> getDocIdsByPhrase(final List<String> queries) {
         return searcher.getDocIdsByPhrase(queries);
     }
 
-    public void printAnswer(String query, List<Integer> docIds) {
+    public void printAnswer(final String query, final List<Integer> docIds) {
         if (docIds.isEmpty()) {
             System.out.println("По запросу " + query.toUpperCase() + " ничего не найдено :(");
         } else {
@@ -55,13 +54,13 @@ public class Searcher {
         }
     }
 
-    private String getStringFromList(List<Integer> docIds) {
+    private String getStringFromList(final List<Integer> docIds) {
         return docIds.stream()
                         .map(Object::toString)
                         .collect(Collectors.joining(", "));
     }
 
-    private List<String> getTerms(String text) {
+    private List<String> getTerms(final String text) {
         return stopWordsAnalysis.execute(tokenizer.getTerms(text));
     }
 }

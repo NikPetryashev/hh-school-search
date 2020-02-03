@@ -7,7 +7,7 @@ public class TermPosition {
     private Integer docId;
     private List<Integer> termPositions;
 
-    public TermPosition(Integer docId, List<Integer> termPositions) {
+    public TermPosition(final Integer docId, final List<Integer> termPositions) {
         this.docId = docId;
         this.termPositions = termPositions;
     }
@@ -22,11 +22,11 @@ public class TermPosition {
 
     @Override
     public String toString() {
-        return String.valueOf(docId)+ termPositions;
+        return String.valueOf(docId) + termPositions;
     }
 //для сравнения объектов только по docId
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TermPosition that = (TermPosition) o;

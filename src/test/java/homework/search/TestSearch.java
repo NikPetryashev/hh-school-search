@@ -68,14 +68,14 @@ public class TestSearch {
         assertTrue(docId.containsAll(Arrays.asList(2)));
     }
 
-//    @Test
-//    public void searchPhrase1() {
-//        Searcher searcher = new Searcher(filePath);
-//        String query = "\"developer в Москве\"";
-//        List<Integer> docId = searcher.searchDocs(query);
-//        System.out.println(docId);
-//        assertTrue(docId.containsAll(Arrays.asList(2,5,6,7)));
-//    }
+    @Test
+    public void searchPhrase1() {
+        Searcher searcher = new Searcher(filePath);
+        String query = "\"developer в Москве\"";
+        List<Integer> docId = searcher.searchDocs(query);
+        System.out.println(docId);
+        assertTrue(docId.containsAll(Arrays.asList(2,5,6,7)));
+    }
 
     @Test
     public void searchNullPhrase() {

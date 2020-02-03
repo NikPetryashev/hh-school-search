@@ -14,22 +14,22 @@ public class StopWordsAnalysis {
     private final Set<String> stopWords;
 
     public StopWordsAnalysis() {
-        Set<String> stopWords = new HashSet<>();
+        Set<String> setStopWords = new HashSet<>();
         try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("stopWords.inp")) {
             assert inputStream != null;
-            InputStreamReader isReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8 );
+            InputStreamReader isReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(isReader);
             String str;
-            while((str = reader.readLine())!= null){
-                stopWords.add(str);
+            while ((str = reader.readLine()) != null) {
+                setStopWords.add(str);
             }
         } catch (IOException e) {
             e.getMessage();
         }
-        this.stopWords = stopWords;
+        this.stopWords = setStopWords;
     }
 
-    public List<String> execute(List<String> words) {
+    public List<String> execute(final List<String> words) {
         return words.stream()
                 .filter(word -> !stopWords.contains(word))
                 .collect(Collectors.toList());

@@ -20,17 +20,17 @@ public class Indexer {
     private static StopWordsAnalysis stopWordsAnalysis;
     private static Tokenizer tokenizer;
 
-    public Indexer(String filePath) {
+    public Indexer(final String filePath) {
         indexBuilder = new IndexBuilder(filePath);
         tokenizer = new Tokenizer();
         stopWordsAnalysis = new StopWordsAnalysis();
     }
 
-    public void writeIndex(String inputFile) {
+    public void writeIndex(final String inputFile) {
         IndexBuilder.writeIndex(getDocs(inputFile));
     }
 
-    public static List<Document> getDocs(String inputFile) {
+    public static List<Document> getDocs(final String inputFile) {
         AtomicInteger docId = new AtomicInteger();
         try (Stream<String> stream = Files.lines(Paths.get(inputFile), StandardCharsets.UTF_8)) {
             return stream.map(doc -> new Document(docId.incrementAndGet(), getTerms(doc)))
@@ -41,7 +41,7 @@ public class Indexer {
         return Collections.EMPTY_LIST;
     }
 
-    private static List<String> getTerms(String text) {
+    private static List<String> getTerms(final String text) {
         return stopWordsAnalysis.execute(tokenizer.getTerms(text));
     }
 }
