@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestSearch {
@@ -16,7 +17,7 @@ public class TestSearch {
         String query = " java";
         List<Integer> docId = searcher.searchDocs(query);
         System.out.println(docId);
-        assertTrue(docId.containsAll(Arrays.asList(1,2,4,5,7)));
+        assertEquals(docId, Arrays.asList(1,2,4,5,7));
     }
 
     @Test
@@ -24,7 +25,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = "java AND SQL в";
         List<Integer> docId = searcher.searchDocs(query);
-        assertTrue(docId.containsAll(Arrays.asList(2,4,5,7)));
+        assertEquals(docId, Arrays.asList(2,4,5,7));
     }
 
     @Test
@@ -32,7 +33,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = "java AND SQL AND kotlin";
         List<Integer> docId = searcher.searchDocs(query);
-        assertTrue(docId.containsAll(Arrays.asList(2,5,7)));
+        assertEquals(docId, Arrays.asList(2,5,7));
     }
 
     @Test
@@ -40,7 +41,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = "java AND SQL NOT kotlin";
         List<Integer> docId = searcher.searchDocs(query);
-        assertTrue(docId.containsAll(Arrays.asList(4)));
+        assertEquals(docId, Arrays.asList(4));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = "java NOT Python";
         List<Integer> docId = searcher.searchDocs(query);
-        assertTrue(docId.containsAll(Arrays.asList(2,4,5,7)));
+        assertEquals(docId, Arrays.asList(2,4,5,7));
     }
 
     @Test
@@ -56,7 +57,7 @@ public class TestSearch {
         Searcher searcher = new Searcher(filePath);
         String query = "NOT java Python";
         List<Integer> docId = searcher.searchDocs(query);
-        assertTrue(docId.containsAll(Arrays.asList(3)));
+        assertEquals(docId, Arrays.asList(3));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class TestSearch {
         String query = "\"javA-developer\"";
         List<Integer> docId = searcher.searchDocs(query);
 //        System.out.println(docId);
-        assertTrue(docId.containsAll(Arrays.asList(2)));
+        assertEquals(docId, Arrays.asList(2));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class TestSearch {
         String query = "\"developer в Москве\"";
         List<Integer> docId = searcher.searchDocs(query);
         System.out.println(docId);
-        assertTrue(docId.containsAll(Arrays.asList(2,5,6,7)));
+        assertEquals(docId, Arrays.asList(2,5,6,7));
     }
 
     @Test
