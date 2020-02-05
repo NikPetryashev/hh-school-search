@@ -96,8 +96,8 @@ public class IndexBuilder {
         if (fileIndex.exists())
             return;
         if (fileIndex.getParentFile() != null) {
-            if (!fileIndex.getParentFile().mkdir()) {
-                System.out.println("Файл индекса не создан!");
+            if (fileIndex.getParentFile().mkdirs()) {
+                System.out.println("Создана новая директория!");
             }
         }
     }
